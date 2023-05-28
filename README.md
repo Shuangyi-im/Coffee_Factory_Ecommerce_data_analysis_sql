@@ -123,13 +123,13 @@ and utm_source = 'gsearch';
 
 ```sql
 select
-sessions-1 as repeat_sessions,  --exclude the first session
+sessions-1 as repeat_sessions,  -- exclude the first session
 count(user_id) as users_count
 from
 (
 SELECT user_id, count(website_session_id) as sessions
 from website_sessions
-where created_at between '2014-01-01' and '2014-10-31' --也可以created_at >= '2014-01-01' and created_at < '2014-11-01'
+where created_at between '2014-01-01' and '2014-10-31' -- or created_at >= '2014-01-01' and created_at < '2014-11-01'
 group by user_id
 having min(is_repeat_session)=0  -- if min = 1, they have already visited before 2014
 ) as new_users
