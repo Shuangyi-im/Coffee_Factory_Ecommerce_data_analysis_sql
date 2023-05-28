@@ -147,7 +147,10 @@ group by sessions;
 ### PRO TIP: “PIVOTING” DATA WITH COUNT & CASE
 > Excel’s ability to pivot to columns can be replicated in SQL using COUNT and CASE
 
-Here we’re breaking down the count of order_id by primary_product_id (rows) and items_purchased (columns) to see how many orders were placed for each primary product and how many of those orders included multiple items
+Here we’re breaking down the count of order_id by primary_product_id (rows) and items_purchased (columns) to see how many orders were placed for each primary product and how many of those orders included multiple items.
+
+![pivot table excel vs sql](https://github.com/Shuangyi-im/Coffee_Factory_Ecommerce_data_analysis_sql/assets/78413872/efeb0e5b-6629-4a82-ab38-5d473d18ca63)
+
 
 
 ```sql
