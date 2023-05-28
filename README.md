@@ -1,7 +1,6 @@
 # Coffee_Factory_Ecommerce_data_analysis_sql
 
-Date source are from Udemy course.
- 
+
 
 # Objectives
 Maven Fuzzy Factory is a growing eCommerce company that specializes in selling handmade crafts and accessories. As the company expands, it is becoming increasingly important to analyze and interpret data to make informed decisions.
@@ -49,7 +48,7 @@ Paid traffic is commonly tagged with **tracking (UTM) parameters**, which are ap
 URLs and allow us to tie website activity back to specific traffic sources and campaigns
  we will use the trm parameters stored in the database to identify paid website sessions**
  
-## 1 Finding Top Traffic Source
+## 1. Finding Top Traffic Source
 
 **❓ Question 1:** we will use the trm parameters stored in the database to identify paid website sessions link to order data to understand **how much revenue our paid campaigns are driving**
 
@@ -115,37 +114,35 @@ and utm_source = 'gsearch';
  
 ![calculate the conversion rate (CVR) output](https://github.com/Shuangyi-im/Coffee_Factory_Ecommerce_data_analysis_sql/assets/78413872/a47f8810-92f0-47f5-81a7-bd91faf4ef7a)
  
-its below the 4% threshold，need to conduct further analysis and discuss with the team about the reasons/actions.
+**Conclusion**: its below the 4% threshold as manager expected, need to conduct further analysis and discuss with the team about the reasons/actions.
  
   
-   
-## 2.Bid optimisation and trend analysis 
-* *Business concepts: Analyzing for bid optimization is about understanding the value of various
-segments of paid traffic, so that you can optimize your marketing budge* *
+## 2.Identifying repeat visitor
 
-**COMMON USE CASES:**
-
-- Using conversion rate and revenue per click analyses to figure out how much you should
-spend per click to acquire customers
-- Understanding how your **website and products perform** for various subsegments of traffic (i.e. mobile vs desktop) to optimize within **channels**
-- Analyzing the **impact** that bid changes have on your **ranking in the auctions**, and the volume of customers driven to your site
-
-![bid](https://github.com/Shuangyi-im/Coffee_Factory_Ecommerce_data_analysis_sql/assets/78413872/c737541c-e209-4499-b3c4-80259a7d93e7)
+**❓Question :**  pull data on **how many of our website visitors** come back for another session? 2014 to date.
 
 ```sql
-select 
-year(created_at),
-week(created_at),
-MIN(date(created_at)) as week_start, -- very important to show the starting date for that week you select
-count(distinct website_session_id) as sessions
+select
+sessions-1 as repeat_sessions,  --exclude the first session
+count(user_id) as users_count
+from
+(
+SELECT user_id, count(website_session_id) as sessions
 from website_sessions
-group by 1,2;
+where created_at between '2014-01-01' and '2014-10-31' --也可以created_at >= '2014-01-01' and created_at < '2014-11-01'
+group by user_id
+having min(is_repeat_session)=0  -- if min = 1, they have already visited before 2014
+) as new_users
+group by sessions;
 ```
 
 
-Output 
+**Output**
 
-![output bid analysis](https://github.com/Shuangyi-im/Coffee_Factory_Ecommerce_data_analysis_sql/assets/78413872/3411f90b-a1a0-498d-bd27-18c2523282fe)
+<img width="280" alt="Identifying repeat visitor" src="https://github.com/Shuangyi-im/Coffee_Factory_Ecommerce_data_analysis_sql/assets/78413872/7d0204ed-692b-4860-b8d5-3ee1e99ad05a">
+
+
+
 
 ### PRO TIP: “PIVOTING” DATA WITH COUNT & CASE
 > Excel’s ability to pivot to columns can be replicated in SQL using COUNT and CASE
@@ -161,6 +158,8 @@ from orders
 where order_id between 31000 and 32000 -- arbitrary
 group by 1;
 ```
+
+**Output**
 ![pivot](https://github.com/Shuangyi-im/Coffee_Factory_Ecommerce_data_analysis_sql/assets/78413872/c54780b2-e00d-4868-900c-952ab139c945)
 
 
